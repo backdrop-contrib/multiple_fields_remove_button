@@ -3,9 +3,9 @@
  * Implement of hook_menu
  */
 function multiple_fields_remove_button_menu() {
-
-  $items['multiple-fields-remove/ajax'] = array(
-    'page callback' => 'multiple_fields_remove_js',
+  $items = array();
+  $items['multiple_fields_remove_button/ajax'] = array(
+    'page callback' => 'multiple_fields_remove_button_js',
     'delivery callback' => 'ajax_deliver',
     'access callback' => TRUE,
     'theme callback' => 'ajax_base_page_theme',
@@ -18,14 +18,12 @@ function multiple_fields_remove_button_menu() {
  }
  
  /**
- * Page callback to handle AJAX for removing a field collection item.
+ * Menu Page callback remove field when remove click is trigger
  *
- * This is a direct page callback. The actual job of deleting the item is
- * done in the submit handler for the button, so all we really need to
- * do is process the form and then generate output. We generate this
- * output by doing a replace command on the id of the entire form element.
+ *  In this callback we will replace field items. Main job to delete field
+ *  item we will done into submit handler. 
  */
-function multiple_fields_remove_js() {
+function multiple_fields_remove_button_js() {
   // drupal_html_id() very helpfully ensures that all html IDS are unique
   // on a page. Unfortunately what it doesn't realize is that the IDs
   // we are generating are going to replace IDs that already exist, so
@@ -42,12 +40,19 @@ function multiple_fields_remove_js() {
   // Go two levels up in the form, to the whole widget.
   $element = drupal_array_get_nested_value($form, array_slice($button['#array_parents'], 0, -3));
   // Now send back the proper AJAX command to replace it.
+ if($button['#parents'][2] == 0) {
+   // unset value if single item is there
+    unset ($element['und'][0]['value']['#default_value']);
+    unset ($element['und'][0]['value']['#value']);
+   }
   $return = array(
     '#type' => 'ajax',
     '#commands' => array(
       ajax_command_replace('#' . $element['#id'], drupal_render($element))
     ),
   );
+
+   // drupal_set_message("<pre>".print_r($button['#parents'][2], true)."</pre>");
 
   // Because we're doing this ourselves, messages aren't automatic. We have
   // to add them.
@@ -62,15 +67,10 @@ function multiple_fields_remove_js() {
 /*
  * implements hook_field_widget_form_alter(&$element, &$form_state, $context)
  */
-function multiple_fields_remove_field_widget_form_alter($element, $form_state, $context) {
-  //drupal_set_message($context);
-}
+function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
+   //drupal_set_message("<pre>".print_r($context['instance']['widget']['type'], true)."</pre>");
+   // drupal_set_message("<pre>".print_r($context['field']['type'], true)."</pre>");
 
-
-/**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().
- */
- function multiple_fields_remove_button_widget_multiple_selects_form_alter(&$element, &$form_state, $context) {
       $field_parents = $element['#field_parents'];
       $field_name = $element['#field_name'];
       $language = $element['#language'];
@@ -79,7 +79,7 @@ function multiple_fields_remove_field_widget_form_alter($element, $form_state, $
       // by appending [field_name, langcode, delta] to the current parent space.
       // That way the form values of the field collection item are separated.
       $parents = array_merge($field_parents, array($field_name, $language, $element['#delta']));
-  //if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
+    if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED && ($context['field']['type'] == 'text' || $context['instance']['widget']['type'] == 'multiple_selects' )) {
         $element['remove_button'] = array(
           '#delta' => $element['#delta'],
           '#name' => implode('_', $parents) . '_remove_button',
@@ -90,11 +90,20 @@ function multiple_fields_remove_field_widget_form_alter($element, $form_state, $
           '#submit' => array('multiple_fields_remove_submit'),
           '#limit_validation_errors' => array(),
           '#ajax' => array(
-            'path' => 'multiple-fields-remove/ajax',
+            'path' => 'multiple_fields_remove_button/ajax',
             'effect' => 'fade',
           ),
           '#weight' => 1000,
         );
+    }
+}
+
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+ function multiple_fields_remove_button_widget_multiple_selects_form_alter(&$element, &$form_state, $context) {
+
      // }
  
  }
@@ -125,6 +134,7 @@ function multiple_fields_remove_submit($form, &$form_state) {
   $parents = $parent_element['#field_parents'];
 
   $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+  //drupal_set_message("<pre>".print_r($element, true)."</pre>");
 
   // Go ahead and renumber everything from our delta to the last
   // item down one. This will overwrite the item being removed.
@@ -183,6 +193,8 @@ function multiple_fields_remove_submit($form, &$form_state) {
       $input[$key]['_weight'] = $weight++;
     }
   }
+
+    
 
   drupal_array_set_nested_value($form_state['input'], $address, $input);
   field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
