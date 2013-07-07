@@ -155,7 +155,6 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   // trying to add a new entity won't ressurect a deleted entity
   // from thev trash bin.
   $count = count($field_state['entity']);
-  // $field_state['entity'][$count] = entity_create('field_collection_item', array('field_name' => $field_name));
 
   // Then remove the last item. But we must not go negative.
   if ($field_state['items_count'] > 0) {
@@ -172,7 +171,7 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   // the 3, the order of the two 3s now is undefined and may not match what
   // the user had selected.
   $input = drupal_array_get_nested_value($form_state['input'], $address);
-  // Sort by weight
+  // Sort by weight.
   uasort($input, '_field_sort_items_helper');
 
   // Reweight everything in the correct order.
@@ -182,11 +181,10 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
       $input[$key]['_weight'] = $weight++;
     }
   }
-
-
   drupal_array_set_nested_value($form_state['input'], $address, $input);
   field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
 
   $form_state['rebuild'] = TRUE;
 }
+
 
