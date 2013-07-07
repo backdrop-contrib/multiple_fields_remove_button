@@ -74,9 +74,11 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
   $field_name = $element['#field_name'];
   $language = $element['#language'];
 
-  // Get parent which will we use into Remove Button Element
-  $parents = array_merge($field_parents, array($field_name, $language, $element['#delta']));
-  if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED && 
+  // Get parent which will we use into Remove Button Element.
+  $parents = array_merge(
+    $field_parents,
+    array($field_name, $language, $element['#delta']));
+  if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
   ($context['field']['type'] == 'text' ||
    $context['instance']['widget']['type'] == 'multiple_selects')) {
     $element['remove_button'] = array(
@@ -90,8 +92,8 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
       '#limit_validation_errors' => array(),
       '#ajax' => array(
         'path' => 'multiple_fields_remove_button/ajax',
-        'effect' => 'fade'
-        ),
+        'effect' => 'fade',
+      ),
       '#weight' => 1000,
     );
   }
