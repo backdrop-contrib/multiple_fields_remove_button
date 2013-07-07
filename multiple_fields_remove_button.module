@@ -186,5 +186,3 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
 
   $form_state['rebuild'] = TRUE;
 }
-
-
