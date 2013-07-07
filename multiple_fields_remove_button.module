@@ -79,8 +79,8 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     $field_parents,
     array($field_name, $language, $element['#delta']));
   if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
-  ($context['field']['type'] == 'text' ||
-   $context['instance']['widget']['type'] == 'multiple_selects')) {
+    ($context['field']['type'] == 'text' ||
+    $context['instance']['widget']['type'] == 'multiple_selects')) {
     $element['remove_button'] = array(
       '#delta' => $element['#delta'],
       '#name' => implode('_', $parents) . '_remove_button',
