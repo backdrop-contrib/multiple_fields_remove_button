@@ -1,14 +1,13 @@
 <?php
 /**
  * @file
- *  In this file we use widget hooks to extend their functionality.
+ * In this file we use widget hooks to extend their functionality.
  *
  * We use drupal hooks and add remove button for fields remove.
  */
 
 
 /**
- *
  * Implements hook_menu().
  */
 function multiple_fields_remove_button_menu() {
@@ -26,9 +25,10 @@ function multiple_fields_remove_button_menu() {
 }
 
 /**
- * Menu Page callback remove field when remove click is trigger
+ * Menu Page callback remove field when remove click is trigger.
  *
- *  In this callback we will replace field items. Main job to delete field item we will done into submit handler.
+ * In this callback we will replace field items. Main job
+ * to delete field item we will done into submit handler.
  *
  * @see multiple_fields_remove_button_menu()
  */
@@ -52,7 +52,7 @@ function multiple_fields_remove_button_js() {
   $return = array(
     '#type' => 'ajax',
     '#commands' => array(
-      ajax_command_replace('#' . $element['#id'], drupal_render($element))
+      ajax_command_replace('#' . $element['#id'], drupal_render($element)),
     ),
   );
 
@@ -67,7 +67,6 @@ function multiple_fields_remove_button_js() {
 }
 
 /**
- *
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
@@ -77,7 +76,9 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
 
   // Get parent which will we use into Remove Button Element
   $parents = array_merge($field_parents, array($field_name, $language, $element['#delta']));
-  if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED && ($context['field']['type'] == 'text' || $context['instance']['widget']['type'] == 'multiple_selects' )) {
+  if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED && 
+  ($context['field']['type'] == 'text' ||
+   $context['instance']['widget']['type'] == 'multiple_selects')) {
     $element['remove_button'] = array(
       '#delta' => $element['#delta'],
       '#name' => implode('_', $parents) . '_remove_button',
@@ -89,14 +90,15 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
       '#limit_validation_errors' => array(),
       '#ajax' => array(
         'path' => 'multiple_fields_remove_button/ajax',
-        'effect' => 'fade'),
+        'effect' => 'fade'
+        ),
       '#weight' => 1000,
-  );
+    );
   }
 }
 
 
- /**
+/**
  * Submit callback to remove an item from the field UI multiple wrapper.
  *
  * When a remove button is submitted, we need to find the item that it
@@ -148,10 +150,10 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   }
 
   // Replace the deleted entity with an empty one. This helps to ensure that
-  // trying to add a new entity won't ressurect a deleted entity from the
-  // trash bin.
+  // trying to add a new entity won't ressurect a deleted entity
+  // from thev trash bin.
   $count = count($field_state['entity']);
-  //$field_state['entity'][$count] = entity_create('field_collection_item', array('field_name' => $field_name));
+  // $field_state['entity'][$count] = entity_create('field_collection_item', array('field_name' => $field_name));
 
   // Then remove the last item. But we must not go negative.
   if ($field_state['items_count'] > 0) {
