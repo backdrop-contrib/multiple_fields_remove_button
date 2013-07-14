@@ -1,5 +1,4 @@
 Description: 
-
 Multiple fields remove button add functionality to remove unlimited input fields
 from node form.
 
