@@ -70,14 +70,16 @@ function multiple_fields_remove_button_js() {
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
-  $field_parents = $element['#field_parents'];
-  $field_name = $element['#field_name'];
-  $language = $element['#language'];
+  
+  $field_parents = isset($element['#field_parents'])?$element['#field_parents']:array();
+  $field_name = isset($element['#field_name'])?$element['#field_name']:null;
+  $language = isset($element['#language'])?$element['#language']:LANGUAGE_NONE;
+  $delta = isset($element['#delta'])?$element['#delta']:0;
 
   // Get parent which will we use into Remove Button Element.
   $parents = array_merge(
     $field_parents,
-    array($field_name, $language, $element['#delta']));
+    array($field_name, $language,$delta));
   if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
     ($context['field']['type'] == 'text' ||
     $context['instance']['widget']['type'] == 'multiple_selects')) {
