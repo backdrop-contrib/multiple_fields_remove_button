@@ -18,8 +18,6 @@ function multiple_fields_remove_button_menu() {
     'access callback' => TRUE,
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
-    'file path' => 'includes',
-    'file' => 'form.inc',
   );
   return $items;
 }
@@ -156,7 +154,7 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   // Replace the deleted entity with an empty one. This helps to ensure that
   // trying to add a new entity won't ressurect a deleted entity
   // from thev trash bin.
-  $count = count($field_state['entity']);
+  // $count = count($field_state['entity']);
 
   // Then remove the last item. But we must not go negative.
   if ($field_state['items_count'] > 0) {
