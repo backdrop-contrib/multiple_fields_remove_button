@@ -2,4 +2,3 @@ name= Multiple Fields Remove Button
 description= Add remove button for mutli showing fields  .
 core=7.x
 package="Fields"
-version = "7.x-2.1"
