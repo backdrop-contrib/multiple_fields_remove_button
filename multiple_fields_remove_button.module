@@ -42,11 +42,10 @@ function multiple_fields_remove_button_js($form, $form_state) {
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
-  
-  $field_parents = isset($element['#field_parents'])?$element['#field_parents']:array();
-  $field_name = isset($element['#field_name'])?$element['#field_name']:null;
-  $language = isset($element['#language'])?$element['#language']:LANGUAGE_NONE;
-  $delta = isset($element['#delta'])?$element['#delta']:0;
+  $field_parents = isset($element['#field_parents']) ? $element['#field_parents'] : array();
+  $field_name = isset($element['#field_name']) ? $element['#field_name'] : null;
+  $language = isset($element['#language']) ? $element['#language'] : LANGUAGE_NONE;
+  $delta = isset($element['#delta']) ? $element['#delta'] : 0;
 
   // Get parent which will we use into Remove Button Element.
   $parents = array_merge(
@@ -129,7 +128,6 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   // trying to add a new entity won't ressurect a deleted entity
   // from thev trash bin.
   // $count = count($field_state['entity']);
-
   // Then remove the last item. But we must not go negative.
   if ($field_state['items_count'] > 0) {
     $field_state['items_count']--;
