@@ -6,41 +6,15 @@
  * We use drupal hooks and add remove button for fields remove.
  */
 
-
 /**
- * Implements hook_menu().
- */
-function multiple_fields_remove_button_menu() {
-  $items = array();
-  $items['multiple_fields_remove_button/ajax'] = array(
-    'page callback' => 'multiple_fields_remove_button_js',
-    'delivery callback' => 'ajax_deliver',
-    'access callback' => TRUE,
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
-
-/**
- * Menu Page callback remove field when remove click is trigger.
+ * Ajax callback remove field when remove click is trigger.
  *
  * In this callback we will replace field items. Main job
  * to delete field item we will done into submit handler.
  *
- * @see multiple_fields_remove_button_menu()
+ * @see multiple_fields_remove_button_field_widget_form_alter()
  */
-function multiple_fields_remove_button_js() {
-  // drupal_html_id() very helpfully ensures that all html IDS are unique
-  // on a page. Unfortunately what it doesn't realize is that the IDs
-  // we are generating are going to replace IDs that already exist, so
-  // this actually works against us.
-  if (isset($_POST['ajax_html_ids'])) {
-    unset($_POST['ajax_html_ids']);
-  }
-
-  list($form, $form_state) = ajax_get_form();
-  drupal_process_form($form['#form_id'], $form, $form_state);
+function multiple_fields_remove_button_js($form, $form_state) {
 
   // Get the information on what we're removing.
   $button = $form_state['triggering_element'];
@@ -91,7 +65,7 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
       '#submit' => array('multiple_fields_remove_button_submit_handler'),
       '#limit_validation_errors' => array(),
       '#ajax' => array(
-        'path' => 'multiple_fields_remove_button/ajax',
+        'callback' => 'multiple_fields_remove_button_js',
         'effect' => 'fade',
       ),
       '#weight' => 1000,
