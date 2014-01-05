@@ -25,6 +25,12 @@ function multiple_fields_remove_button_menu() {
 }
 
 /**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function multiple_fields_remove_button_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  
+}
+/**
  * Ajax callback remove field when remove click is trigger.
  *
  * In this callback we will replace field items. Main job
@@ -74,11 +80,21 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
   $parents = array_merge(
     $field_parents,
     array($field_name, $language,$delta));
+    
+    
+    // Remove button for the following field type widgets
+    $fieldwidgets = array(
+      'multiple_selects',
+      'text_textfield',
+      'date_popup',
+      'date_text',
+      'link_field',
+      'entityreference_autocomplete',
+      'number');   
   if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
-    ($context['field']['type'] == 'text' ||
-    $context['instance']['widget']['type'] == 'multiple_selects')) {
+    in_array($context['instance']['widget']['type'], $fieldwidgets)) {
     $element['remove_button'] = array(
-      '#delta' => $element['#delta'],
+      '#delta' => $delta,
       '#name' => implode('_', $parents) . '_remove_button',
       '#type' => 'submit',
       '#value' => t('Remove'),
