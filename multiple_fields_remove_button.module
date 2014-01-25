@@ -81,7 +81,6 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     $field_parents,
     array($field_name, $language,$delta));
     
-    
     // Remove button for the following field type widgets
     $fieldwidgets = array(
       'multiple_selects',
@@ -90,7 +89,10 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
       'date_text',
       'link_field',
       'entityreference_autocomplete',
-      'number');   
+      'number',
+      'text_textarea',
+      'text_textarea_with_summary'
+      );   
   if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
     in_array($context['instance']['widget']['type'], $fieldwidgets)) {
     $element['remove_button'] = array(
