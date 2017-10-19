@@ -150,6 +150,14 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   $langcode = $parent_element['#language'];
   $parents = $parent_element['#field_parents'];
 
+  // We should update also entity (if set) in form state to correctly add new items.
+  if (isset($form['#entity_type']) && isset($form_state[$form['#entity_type']]->{$field_name})) {
+    $entity_field =  &$form_state[$form['#entity_type']]->{$field_name};
+  }
+  else {
+    $entity_field = array();
+  }
+
   $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
 
   // Go ahead and renumber everything from our delta to the last
@@ -158,9 +166,16 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
     $old_element_address = array_merge($address, array($i + 1));
     $new_element_address = array_merge($address, array($i));
 
+    // Address of field elements oin the entity field.
+    $old_entity_element_address = $old_element_address;
+    array_shift($old_entity_element_address);
+    $new_entity_element_address = $new_element_address;
+    array_shift($new_entity_element_address);
+
     $moving_element = drupal_array_get_nested_value($form, $old_element_address);
     $moving_element_value = drupal_array_get_nested_value($form_state['values'], $old_element_address);
     $moving_element_input = drupal_array_get_nested_value($form_state[$inpt], $old_element_address);
+    $moving_element_item = drupal_array_get_nested_value($entity_field, $old_entity_element_address);
 
     // Tell the element where it's being moved to.
     $moving_element['#parents'] = $new_element_address;
@@ -168,6 +183,8 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
     // Move the element around.
     form_set_value($moving_element, $moving_element_value, $form_state);
     drupal_array_set_nested_value($form_state[$inpt], $moving_element['#parents'], $moving_element_input);
+
+    drupal_array_set_nested_value($entity_field, $new_entity_element_address, $moving_element_item);
 
     // Move the entity in our saved state.
     if (isset($field_state['entity'][$i + 1])) {
