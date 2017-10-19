@@ -5,12 +5,13 @@
  *
  * We use drupal hooks and add remove button for fields remove.
  */
+
 /**
  * Implements hook_menu().
  */
 function multiple_fields_remove_button_menu() {
-    $items = array();
-    $items['multiple_fields_remove_button/ajax'] = array(
+  $items = array();
+  $items['multiple_fields_remove_button/ajax'] = array(
     'title' => 'Remove item callback',
     'page callback' => 'multiple_fields_remove_button_js',
     'delivery callback' => 'ajax_deliver',
@@ -20,16 +21,10 @@ function multiple_fields_remove_button_menu() {
     'file path' => 'includes',
     'file' => 'form.inc',
   );
-    
-    return $items;
+
+  return $items;
 }
 
-/**
- * Implements hook_form_BASE_FORM_ID_alter().
- */
-function multiple_fields_remove_button_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
-  
-}
 /**
  * Ajax callback remove field when remove click is trigger.
  *
@@ -39,10 +34,10 @@ function multiple_fields_remove_button_form_field_ui_field_edit_form_alter(&$for
  * @see multiple_fields_remove_button_field_widget_form_alter()
  */
 function multiple_fields_remove_button_js() {
-   if (isset($_POST['ajax_html_ids'])) {
+  if (isset($_POST['ajax_html_ids'])) {
     unset($_POST['ajax_html_ids']);
   }
- 
+
   list($form, $form_state) = ajax_get_form();
   drupal_process_form($form['#form_id'], $form, $form_state);
   // Get the information on what we're removing.
@@ -71,7 +66,7 @@ function multiple_fields_remove_button_js() {
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
-  // Remove button for the following field type widgets
+  // Remove button for the following field type widgets.
   $fieldwidgets = array(
     'multiple_selects',
     'text_textfield',
