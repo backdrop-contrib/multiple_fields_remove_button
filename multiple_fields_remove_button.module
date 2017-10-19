@@ -146,7 +146,8 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   $langcode = $parent_element['#language'];
   $parents = $parent_element['#field_parents'];
 
-  // We should update also entity (if set) in form state to correctly add new items.
+  // We should update also entity (if set) in form state
+  // to correctly add new items.
   if (isset($form['#entity_type']) &&
     isset($form_state[$form['#entity_type']]->{$field_name})) {
     $entity_field = &$form_state[$form['#entity_type']]->{$field_name};
