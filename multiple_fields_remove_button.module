@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * In this file we use widget hooks to extend their functionality.
@@ -101,7 +102,7 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     $parents = array_merge($field_parents, array(
       $field_name,
       $language,
-      $delta
+      $delta,
     ));
 
     $element['remove_button'] = array(
@@ -121,7 +122,6 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     );
   }
 }
-
 
 /**
  * Submit callback to remove an item from the field UI multiple wrapper.
@@ -147,8 +147,9 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   $parents = $parent_element['#field_parents'];
 
   // We should update also entity (if set) in form state to correctly add new items.
-  if (isset($form['#entity_type']) && isset($form_state[$form['#entity_type']]->{$field_name})) {
-    $entity_field =  &$form_state[$form['#entity_type']]->{$field_name};
+  if (isset($form['#entity_type']) &&
+    isset($form_state[$form['#entity_type']]->{$field_name})) {
+    $entity_field = &$form_state[$form['#entity_type']]->{$field_name};
   }
   else {
     $entity_field = array();
@@ -192,7 +193,7 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
   }
 
   // Replace the deleted entity with an empty one. This helps to ensure that
-  // trying to add a new entity won't ressurect a deleted entity
+  // trying to add a new entity won't resurrect a deleted entity
   // from thev trash bin.
   // $count = count($field_state['entity']);
   // Then remove the last item. But we must not go negative.
