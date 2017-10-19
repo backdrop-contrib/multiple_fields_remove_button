@@ -88,8 +88,9 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
   // Add extra widgets with the help of others modules.
   drupal_alter('multiple_field_remove_button_field_widgets', $fieldwidgets);
 
-  if ($context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED && in_array($context['instance']['widget']['type'], $fieldwidgets)) {
-
+  if ($element['#entity'] &&
+    $context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
+    in_array($context['instance']['widget']['type'], $fieldwidgets)) {
     $original_element = $element;
 
     if ($context['field']['type'] == 'entityreference') {
