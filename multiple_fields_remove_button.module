@@ -64,6 +64,30 @@ function multiple_fields_remove_button_js() {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function multiple_fields_remove_button_form_alter(&$form, &$form_state) {
+  if (isset($_POST['ajax_html_ids'])) {
+    if (!empty($form_state['clicked_button']['#parents'][0])) {
+      $name = $form_state['clicked_button']['#parents'][0];
+    }
+    $language = !empty($form['language']['#value']) ? $form['language']['#value'] : LANGUAGE_NONE;
+    if (!empty($name) && !empty($form_state['input'][$name][$language])) {
+      $count = count($form_state['input'][$name][$language]) - 1;
+      if (!empty($form[$name][$language])) {
+        foreach ($form[$name][$language] as $key => &$value) {
+          if (isset($key) && is_numeric($key) && !empty($value['target_id'])) {
+            if ($key > $count) {
+              $value['target_id']['#default_value'] = '';
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
