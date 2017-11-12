@@ -68,13 +68,17 @@ function multiple_fields_remove_button_js() {
  */
 function multiple_fields_remove_button_form_alter(&$form, &$form_state) {
   if (isset($_POST['ajax_html_ids'])) {
-    if (!empty($form_state['clicked_button']['#parents'][0])) {
+    $name = '';
+    if (isset($form_state['clicked_button']['#parents'][0]) &&
+      !empty($form_state['clicked_button']['#parents'][0])) {
       $name = $form_state['clicked_button']['#parents'][0];
     }
-    $language = !empty($form['language']['#value']) ? $form['language']['#value'] : LANGUAGE_NONE;
-    if (!empty($name) && !empty($form_state['input'][$name][$language])) {
+    $language = !empty($form['language']['#value']) ?
+      $form['language']['#value'] : LANGUAGE_NONE;
+    if (!empty($name) && isset($form_state['input'][$name][$language]) &&
+      !empty($form_state['input'][$name][$language])) {
       $count = count($form_state['input'][$name][$language]) - 1;
-      if (!empty($form[$name][$language])) {
+      if (isset($form[$name][$language]) && !empty($form[$name][$language])) {
         foreach ($form[$name][$language] as $key => &$value) {
           if (isset($key) && is_numeric($key) && !empty($value['target_id'])) {
             if ($key > $count) {
