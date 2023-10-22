@@ -2,9 +2,7 @@
 
 /**
  * @file
- * In this file we use widget hooks to extend their functionality.
- *
- * We use drupal hooks and add remove button for fields remove.
+ * Functionality to add a remove button to fields with multiple values.
  */
 
 /**
@@ -19,7 +17,7 @@ function multiple_fields_remove_button_menu() {
     'access callback' => TRUE,
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
-    'file path' => 'includes',
+    'file path' => 'core/includes',
     'file' => 'form.inc',
   );
 
@@ -95,24 +93,31 @@ function multiple_fields_remove_button_form_alter(&$form, &$form_state) {
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
-  // Remove button for the following field type widgets.
+  // Allow a Remove button for the following field type widgets.
   $fieldwidgets = array(
-    'multiple_selects',
-    'text_textfield',
+    'addressfield_standard',
+    'date_html5',
     'date_popup',
+    'date_select',
     'date_text',
-    'link_field',
+    'email_textfield',
     'entityreference_autocomplete',
+    'link_field',
+    'location',
+    'multiple_selects',
     'number',
+    'telephone_default',
     'text_textarea',
     'text_textarea_with_summary',
-    'addressfield_standard',
-    'location',
+    'text_textfield',
   );
   // Add extra widgets with the help of others modules.
   backdrop_alter('multiple_field_remove_button_field_widgets', $fieldwidgets);
 
-  if (isset($element['#entity']) && $element['#entity'] &&
+  $has_entity = (isset($element['#entity']) && $element['#entity'])
+    || (isset($element['target_id']['#entity']) && $element['target_id']['#entity'])
+    || (isset($element['value']['#entity']) && $element['value']['#entity']);
+  if ($has_entity &&
     $context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
     in_array($context['instance']['widget']['type'], $fieldwidgets)) {
     $original_element = $element;
@@ -126,7 +131,7 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     $language = isset($original_element['#language']) ? $original_element['#language'] : LANGUAGE_NONE;
     $delta = isset($original_element['#delta']) ? $original_element['#delta'] : 0;
 
-    // Get parent which will we use into Remove Button Element.
+    // Get parent which will be used to add the Remove Button Element.
     $parents = array_merge($field_parents, array(
       $field_name,
       $language,
@@ -223,7 +228,7 @@ function multiple_fields_remove_button_submit_handler($form, &$form_state) {
 
   // Replace the deleted entity with an empty one. This helps to ensure that
   // trying to add a new entity won't resurrect a deleted entity
-  // from thev trash bin.
+  // from the trash bin.
   // $count = count($field_state['entity']);
   // Then remove the last item. But we must not go negative.
   if ($field_state['items_count'] > 0) {
