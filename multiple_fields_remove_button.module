@@ -103,7 +103,6 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     'email_textfield',
     'entityreference_autocomplete',
     'link_field',
-    'location',
     'multiple_selects',
     'number',
     'telephone_default',

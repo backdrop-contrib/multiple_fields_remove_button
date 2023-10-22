@@ -1,6 +1,8 @@
 # Multiple fields Remove button
 
-Adds a "Remove" button to unlimited input fields.
+Adds a "Remove" button to fields with unlimited values. It will work with these
+fields: addressfield, date, email, entityreference, link, number, telephone,
+text area, textfield.
 
 ## Installation
 
@@ -14,8 +16,8 @@ There is no configuration. It will appear automatically on fields with the
 
 ## For developers
 
-You can add this functionality to others fields which have not containing remove
-button by declaring the following hook:
+You can add this functionality to others field widgets by declaring the
+following hook:
 
 ```php
 function hook_multiple_field_remove_button_field_widgets_alter(&$fieldwidgets) {
