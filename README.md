@@ -26,6 +26,16 @@ function hook_multiple_field_remove_button_field_widgets_alter(&$fieldwidgets) {
 }
 ```
 
+Or, alternatively, you can remove this functionality from field widgets by
+declaring the following hook:
+
+```php
+function hook_multiple_field_remove_button_skip_widgets_alter(&$skipwidgets) {
+  // Add new widget type in the array $skipwidgets
+  $skipwidgets[] = 'custom_field_widget';
+}
+```
+
 ## License
 
 This project is GPL v2 software. See the LICENSE.txt file in this directory

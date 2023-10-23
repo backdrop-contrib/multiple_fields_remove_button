@@ -93,6 +93,10 @@ function multiple_fields_remove_button_form_alter(&$form, &$form_state) {
  * Implements hook_field_widget_form_alter().
  */
 function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form_state, $context) {
+  if ($context['field']['cardinality'] != FIELD_CARDINALITY_UNLIMITED) {
+    return;
+  }
+
   // Allow a Remove button for the following field type widgets.
   $fieldwidgets = array(
     'addressfield_standard',
@@ -110,15 +114,26 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     'text_textarea_with_summary',
     'text_textfield',
   );
-  // Add extra widgets with the help of others modules.
+  // Allow other modules to extend the widget list for allowing a Remove button.
   backdrop_alter('multiple_field_remove_button_field_widgets', $fieldwidgets);
+
+  // Don't add 'Remove' button to some widget types.
+  $skipwidgets = [
+    'entityreference_autocomplete_tags',
+    'inline_entity_form',
+    'select_or_other',
+  ];
+  // Allow other modules extends the list of widgets to skip, including skipping
+  // any of those allowed by default.
+  backdrop_alter('multiple_field_remove_button_skip_widgets', $skipwidgets);
 
   $has_entity = (isset($element['#entity']) && $element['#entity'])
     || (isset($element['target_id']['#entity']) && $element['target_id']['#entity'])
     || (isset($element['value']['#entity']) && $element['value']['#entity']);
-  if ($has_entity &&
-    $context['field']['cardinality'] == FIELD_CARDINALITY_UNLIMITED &&
-    in_array($context['instance']['widget']['type'], $fieldwidgets)) {
+
+  if ($has_entity
+    && in_array($context['instance']['widget']['type'], $fieldwidgets)
+    && !in_array($context['instance']['widget']['type'], $skipwidgets)) {
     $original_element = $element;
 
     if ($context['field']['type'] == 'entityreference') {
