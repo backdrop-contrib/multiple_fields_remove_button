@@ -30,3 +30,31 @@ function hook_multiple_field_remove_button_skip_widgets_alter(&$skipwidgets) {
   // Add new widget type in the array $skipwidgets
   $skipwidgets[] = 'custom_field_widget';
 }
+
+/**
+ * Deny the remove button for a field.
+ *
+ * @param array $element
+ *   An associative array containing the structure of the current element.
+ * @param array $form_state
+ *   A keyed array containing the current state of the form.
+ * @param array $context
+ *   An associative array containing the following keys:
+ *   - field: The $field array.
+ *   - instance: The $instance array.
+ *   - format: The string $format.
+ *   - entity_type: The $entity_type.
+ *   - entity: The $entity object.
+ *   - langcode: The string $langcode.
+ *   - item: The $item array.
+ *   - display: The $display array.
+ * @return true|null
+ *   TRUE if denying the remove button, NULL otherwise.
+ */
+function hook_multiple_fields_remove_button_deny($element, $form_state, $context) {
+  if ($context['instance']['widget']['type'] == 'date_combo') {
+    return TRUE;
+  }
+
+  return NULL;
+}
