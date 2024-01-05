@@ -138,7 +138,7 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     || (isset($element['target_id']['#entity']) && $element['target_id']['#entity'])
     || (isset($element['value']['#entity']) && $element['value']['#entity']);
 
-  if ($has_entity
+  if ($allow && $has_entity
     && in_array($context['instance']['widget']['type'], $fieldwidgets)
     && !in_array($context['instance']['widget']['type'], $skipwidgets)) {
     $original_element = $element;
