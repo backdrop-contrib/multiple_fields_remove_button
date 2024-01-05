@@ -127,6 +127,13 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
   // any of those allowed by default.
   backdrop_alter('multiple_field_remove_button_skip_widgets', $skipwidgets);
 
+  // Check if any module denies the remove button for a widget.
+  $allow = TRUE;
+  $check_deny = module_invoke_all('multiple_fields_remove_button_deny', $element, $form_state, $context);
+  if (!empty($check_deny) && in_array(TRUE, $check_deny, TRUE)) {
+    $allow = FALSE;
+  }
+
   $has_entity = (isset($element['#entity']) && $element['#entity'])
     || (isset($element['target_id']['#entity']) && $element['target_id']['#entity'])
     || (isset($element['value']['#entity']) && $element['value']['#entity']);
