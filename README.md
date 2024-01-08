@@ -16,25 +16,8 @@ There is no configuration. It will appear automatically on fields with the
 
 ## For developers
 
-You can add this functionality to others field widgets by declaring the
-following hook:
-
-```php
-function hook_multiple_field_remove_button_field_widgets_alter(&$fieldwidgets) {
-  // Add new widget type in the array $fieldwidgets
-  $fieldwidgets[] = 'custom_field_type';
-}
-```
-
-Or, alternatively, you can remove this functionality from field widgets by
-declaring the following hook:
-
-```php
-function hook_multiple_field_remove_button_skip_widgets_alter(&$skipwidgets) {
-  // Add new widget type in the array $skipwidgets
-  $skipwidgets[] = 'custom_field_widget';
-}
-```
+You can add or skip this functionality to others field widgets by declaring one
+of the hooks. See the API file for more information.
 
 ## License
 

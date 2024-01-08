@@ -115,7 +115,7 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     'text_textfield',
   );
   // Allow other modules to extend the widget list for allowing a Remove button.
-  backdrop_alter('multiple_field_remove_button_field_widgets', $fieldwidgets);
+  backdrop_alter('multiple_fields_remove_button_field_widgets', $fieldwidgets);
 
   // Don't add 'Remove' button to some widget types.
   $skipwidgets = [
@@ -123,14 +123,14 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     'inline_entity_form',
     'select_or_other',
   ];
-  // Allow other modules extends the list of widgets to skip, including skipping
+  // Allow other modules to extend the list of widgets to skip, including skipping
   // any of those allowed by default.
-  backdrop_alter('multiple_field_remove_button_skip_widgets', $skipwidgets);
+  backdrop_alter('multiple_fields_remove_button_skip_widgets', $skipwidgets);
 
-  // Check if any module denies the remove button for a widget.
+  // Check if any module skips the remove button for a widget.
   $allow = TRUE;
-  $check_deny = module_invoke_all('multiple_fields_remove_button_deny', $element, $form_state, $context);
-  if (!empty($check_deny) && in_array(TRUE, $check_deny, TRUE)) {
+  $skip = module_invoke_all('multiple_fields_remove_button_skip_widget', $element, $form_state, $context);
+  if (in_array(TRUE, $skip, TRUE)) {
     $allow = FALSE;
   }
 
