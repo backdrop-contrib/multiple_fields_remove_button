@@ -108,11 +108,13 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
     'entityreference_autocomplete',
     'link_field',
     'multiple_selects',
+    'node_reference_autocomplete',
     'number',
     'telephone_default',
     'text_textarea',
     'text_textarea_with_summary',
     'text_textfield',
+    'user_reference_autocomplete',
   );
   // Allow other modules to extend the widget list for allowing a Remove button.
   backdrop_alter('multiple_fields_remove_button_field_widgets', $fieldwidgets);
@@ -136,6 +138,8 @@ function multiple_fields_remove_button_field_widget_form_alter(&$element, &$form
 
   $has_entity = (isset($element['#entity']) && $element['#entity'])
     || (isset($element['target_id']['#entity']) && $element['target_id']['#entity'])
+    || (isset($element['nid']['#entity']) && $element['nid']['#entity'])
+    || (isset($element['uid']['#entity']) && $element['uid']['#entity'])
     || (isset($element['value']['#entity']) && $element['value']['#entity']);
 
   if ($allow && $has_entity
